@@ -23,6 +23,7 @@ const SignUpForm = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    console.log(formData);
     try {
       const newUser = await signUp(formData);
       setUser(newUser);
