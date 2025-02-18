@@ -10,11 +10,8 @@ import Navbar from './views/components/Navbar/Navbar';
 import Footer from './views/components/Footer/Footer';
 
 //pages
-import LoginForm from './views/components/forms/LoginForm/LoginForm';
-
-// Test
-import Dashboard from './views/pages/HomePage/HomePage';
-import Landing from './views/pages/HomePage/TestHomePage';
+import Home from './views/pages/HomePage/HomePage';
+import LoginPage from './views/pages/LoginPage/LoginPage';
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -23,8 +20,8 @@ const App = () => {
     <>
       <Navbar />
         <Routes>
-          <Route path="/" element={user ? <Dashboard /> : <Landing /> } />
-          <Route path="/login" element={<LoginForm />} />
+          <Route path="/" element={<Home /> } />
+          <Route path="/login" element={<LoginPage />} />
 
 
         </Routes>

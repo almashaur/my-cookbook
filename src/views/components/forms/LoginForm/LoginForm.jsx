@@ -1,9 +1,6 @@
-
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router';
-
 import { signIn } from '../../../../services/authService';
-
 import { UserContext } from '../../../../context/UserContext';
 
 const SignInForm = () => {
@@ -23,10 +20,7 @@ const SignInForm = () => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     try {
-      // This function doesn't exist yet, but we'll create it soon.
-      // It will cause an error right now
       const signedInUser = await signIn(formData);
-
       setUser(signedInUser);
       navigate('/');
     } catch (err) {
@@ -35,42 +29,53 @@ const SignInForm = () => {
   };
 
   return (
-    <main>
-      <h1>Sign In</h1>
-      <p>{message}</p>
-      <form autoComplete='off' onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='email'>Username:</label>
-          <input
-            type='text'
-            autoComplete='off'
-            id='username'
-            value={formData.username}
-            name='username'
-            onChange={handleChange}
-            required
-          />
+    <main className="d-flex align-items-center justify-content-center min-vh-100">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-6 col-lg-4">
+            <div className="card shadow p-4 rounded">
+              <h1 className="text-center mb-4">Sign In</h1>
+              {message && <div className="alert alert-danger">{message}</div>}
+              <form autoComplete="off" onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="username" className="form-label">Username:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    value={formData.username}
+                    name="username"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Password:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    value={formData.password}
+                    name="password"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="d-flex justify-content-between">
+                  <button type="submit" className="btn btn-primary w-100">Sign In</button>
+                </div>
+                <div className="text-center mt-3">
+                  <button type="button" className="btn btn-secondary" onClick={() => navigate("/")}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-        <div>
-          <label htmlFor='password'>Password:</label>
-          <input
-            type='password'
-            autoComplete='off'
-            id='password'
-            value={formData.password}
-            name='password'
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <button>Sign In</button>
-          <button onClick={() => navigate('/')}>Cancel</button>
-        </div>
-      </form>
+      </div>
     </main>
   );
 };
 
 export default SignInForm;
-

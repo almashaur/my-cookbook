@@ -6,12 +6,18 @@ const Dashboard = () => {
   const { user } = useContext(UserContext);
 
   return (
-    <main>
-      <h1>Welcome, {user.username}</h1>
-      <p>
-        This is the dashboard page where you can see a list of all the users.
-      </p>
-    </main>
+    (user ? (
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome, {user.username}</p>
+      </div>
+    ) : (
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome, please login</p>
+      </div>
+    )
+  )
   );
 };
 
