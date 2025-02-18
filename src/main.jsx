@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { UserProvider } from './contexts/UserContext.jsx';
+import { UserProvider } from './context/UserContext.jsx';
 
 import App from './App.jsx';
 

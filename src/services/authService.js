@@ -1,7 +1,8 @@
+import { jwtDecode } from "jwt-decode";
+
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/auth`;
 
 const signUp = async (formData) => {
-  console.log(formData);
   try {
     const res = await fetch(`${BASE_URL}/register`, {
       method: "POST",
@@ -11,19 +12,24 @@ const signUp = async (formData) => {
 
     const data = await res.json();
 
-    if (data.err) {
-      throw new Error(data.err);
+    if (!res.ok) {
+      throw new Error(data.err || "Failed to register");
     }
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      return JSON.parse(atob(data.token.split(".")[1])).payload;
+      try {
+        return jwtDecode(data.token); // Decode safely
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+      }
     }
 
     throw new Error("Invalid response from server");
   } catch (err) {
-    console.log(err);
-    throw new Error(err);
+    console.error("Signup Error:", err);
+    throw err;
   }
 };
 
@@ -37,20 +43,29 @@ const signIn = async (formData) => {
 
     const data = await res.json();
 
-    if (data.err) {
-      throw new Error(data.err);
+    if (!res.ok) {
+      throw new Error(data.err || "Failed to log in");
     }
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      return JSON.parse(atob(data.token.split(".")[1])).payload;
+      try {
+        return jwtDecode(data.token);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+      }
     }
 
     throw new Error("Invalid response from server");
   } catch (err) {
-    console.log(err);
-    throw new Error(err);
+    console.error("Sign-in Error:", err);
+    throw err;
   }
 };
 
-export { signUp, signIn };
+const logout = () => {
+  localStorage.removeItem("token");
+};
+
+export { signUp, signIn, logout };

@@ -1,14 +1,21 @@
-import React from "react";
-import { Navbar, Nav, Container, Form, FormControl, Button, NavDropdown } from "react-bootstrap";
+import { useContext } from "react";
+import { Navbar, Nav, Container} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const MyNavbar = () => {
-  const isAuthenticated = false; // Change this based on authentication state
+import { UserContext } from '../../../context/UserContext';
 
+
+
+const MyNavbar = () => {
+  const { user } = useContext(UserContext);
+
+  const logoutUser = () => {
+    alert("Logged out!!");
+  };
+  
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
-        {/* Brand Logo */}
         <Navbar.Brand as={Link} to="/">My Cookbook</Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -18,22 +25,10 @@ const MyNavbar = () => {
             <Nav.Link as={Link} to="/recipes">Recipes</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
           </Nav>
-
-          {/* Search Bar */}
-          <Form className="d-flex me-3">
-            <FormControl type="search" placeholder="Search recipes..." className="me-2" />
-            <Button variant="outline-light">Search</Button>
-          </Form>
-
-          {/* User Authentication Section */}
-          {isAuthenticated ? (
+          {user ? (
             <Nav>
-              <NavDropdown title="Profile" id="basic-nav-dropdown">
-                <NavDropdown.Item as={Link} to="/profile">My Profile</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/my-recipes">My Recipes</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item>Logout</NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+              <Nav.Link as="button" onClick={logoutUser}>Logout</Nav.Link>
             </Nav>
           ) : (
             <Nav>
