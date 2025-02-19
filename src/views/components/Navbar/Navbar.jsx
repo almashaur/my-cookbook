@@ -1,16 +1,17 @@
 import { useContext } from "react";
 import { Navbar, Nav, Container} from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { UserContext } from '../../../context/UserContext';
 
-
-
 const MyNavbar = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const logoutUser = () => {
     alert("Logged out!!");
+    setUser(null);
+    navigate('/');
   };
   
   return (
