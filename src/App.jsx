@@ -7,7 +7,7 @@ import { UserContext } from './context/UserContext';
 // Routes
 // components
 import Navbar from './views/components/Navbar/Navbar';
-import Footer from './views/components/Footer/Footer';
+// import Footer from './views/components/Footer/Footer';
 
 //pages
 import LoginForm from './views/components/forms/LoginForm/LoginForm';
@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/register" element={<RegisterForm />} />
 
         </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </>
 
   );
