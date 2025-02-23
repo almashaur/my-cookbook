@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../../context/UserContext';
 import { Link } from 'react-router';
 
@@ -59,8 +59,9 @@ const cuisines = [
   },
 ];
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const { user } = useContext(UserContext);
+
 
   return (
     <main>
@@ -106,11 +107,13 @@ const Dashboard = () => {
                     <h1>{cuisine.name}</h1>
                     <p className="card-text">{cuisine.description}</p>
                     <div className="d-flex justify-content-between align-items-center">
-                      <Link to="/allrecipes">
+                    <Link to={{
+                        pathname: '/allrecipes',
+                      }}>                      
                       <button
                         type="button"
                         className="btn btn-sm btn-outline-secondary"
-                      >
+                      onClick={() => props.handleCuisineClick(cuisine)}>
                         go to cuisine
                       </button>
                       </Link>
