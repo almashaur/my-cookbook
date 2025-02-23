@@ -74,7 +74,6 @@ const Dashboard = () => {
         />
         <h1 className="display-5 fw-bold">My cookbook</h1>
         <div className="col-lg-6 mx-auto">
-          <h1>Featured Cuisine: Italian</h1>
           <p className="lead mb-4">
             Quickly design and customize responsive mobile-first sites with
             Bootstrap – the world’s most popular front-end open source toolkit.
