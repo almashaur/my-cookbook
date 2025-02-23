@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { UserContext } from '../../../context/UserContext';
+import { Link } from 'react-router';
 
 const cuisines = [
   {
@@ -79,9 +80,12 @@ const Dashboard = () => {
             Bootstrap – the world’s most popular front-end open source toolkit.
           </p>
           <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <Link to="/recipes">
             <button type="button" className="btn btn-info btn-lg px-4 gap-3">
-              All Recipes
+              View All Recipes
             </button>
+          </Link>
+
           </div>
         </div>
       </div>
@@ -103,12 +107,14 @@ const Dashboard = () => {
                     <h1>{cuisine.name}</h1>
                     <p className="card-text">{cuisine.description}</p>
                     <div className="d-flex justify-content-between align-items-center">
+                      <Link to="/recipes">
                       <button
                         type="button"
                         className="btn btn-sm btn-outline-secondary"
                       >
                         go to cosine
                       </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
