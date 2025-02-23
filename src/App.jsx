@@ -11,6 +11,7 @@ import Footer from './views/components/Footer/Footer';
 
 //pages
 import LoginForm from './views/components/forms/LoginForm/LoginForm';
+import RegisterForm from './views/components/forms/RegisterForm/RegisterForm';
 
 // Test
 import Dashboard from './views/pages/HomePage/HomePage';
@@ -25,7 +26,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={user ? <Dashboard /> : <Landing /> } />
           <Route path="/login" element={<LoginForm />} />
-
+          <Route path="/register" element={<RegisterForm />} />
 
         </Routes>
       <Footer />
