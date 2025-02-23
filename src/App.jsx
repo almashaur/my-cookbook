@@ -12,10 +12,10 @@ import Navbar from './views/components/Navbar/Navbar';
 //pages
 import LoginForm from './views/components/forms/LoginForm/LoginForm';
 import RegisterForm from './views/components/forms/RegisterForm/RegisterForm';
+import AllRecipes from './views/pages/AllRecipes/AllRecipes';
 
 // Test
 import Dashboard from './views/pages/HomePage/HomePage';
-import Landing from './views/pages/HomePage/TestHomePage';
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -24,9 +24,10 @@ const App = () => {
     <>
       <Navbar />
         <Routes>
-          <Route path="/" element={user ? <Dashboard /> : <Landing /> } />
+          <Route path="/" element={ <Dashboard /> } />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
+          <Route path="/allrecipes" element={<AllRecipes />} />
 
         </Routes>
       {/* <Footer /> */}
