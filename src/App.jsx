@@ -19,8 +19,8 @@ import MyRecipes from './views/pages/MyRecipes/MyRecipes';
 import RecipeDetails from './views/pages/RecipeDetails/RecipeDetails';
 import AboutPage from './views/pages/AboutPage/AboutPage';
 import Profile from "./views/pages/Profile/Profile";
-import AddRecipe from "./views/components/forms/AddRecipe/AddRecipe";
-import EditRecipe from "./views/components/forms/EditRecipe/EditRecipe";
+// import AddRecipe from "./views/components/forms/AddRecipe/AddRecipe";
+// import EditRecipe from "./views/components/forms/EditRecipe/EditRecipe";
 
 // Test
 import Dashboard from './views/pages/HomePage/HomePage';

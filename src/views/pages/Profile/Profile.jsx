@@ -8,7 +8,6 @@ const Profile = () => {
     const [refreshTrigger, setRefreshTrigger] = useState(true);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         if (!user || !user.token) {
             console.error("No user or token found.");
