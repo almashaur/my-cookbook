@@ -8,8 +8,8 @@ import { UserContext } from './context/UserContext';
 import Navbar from './views/components/Navbar/Navbar';
 import Footer from './views/components/Footer/Footer';
 import RecipeCard from './views/components/RecipeCard/RecipeCard';
-import RegistrationForm from './views/components/forms/RegistrationForm/RegistrationForm';
-import LoginForm from './views/components/forms/LoginForm/LoginForm';
+// import RegistrationForm from './views/components/forms/RegistrationForm/RegistrationForm';
+// import LoginForm from './views/components/forms/LoginForm/LoginForm';
 
 //pages
 import LoginPage from './views/pages/LoginPage/LoginPage';
@@ -43,6 +43,7 @@ const App = () => {
           <Route path="/recipes" element={<AllRecipes />} />
           <Route path="/recipes/:id" element={<RecipeDetails />} />
           <Route path="/recipes/user/:id" element={<MyRecipes />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
     </>
