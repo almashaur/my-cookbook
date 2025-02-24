@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllRecipes } from '../../../services/recipeService';
 
+
 const RecipeFilter = (props) => {
     const propResult =  props.cuisine?.name ? (`${props.cuisine.name}`):("all");
 
@@ -42,18 +43,27 @@ const RecipeFilter = (props) => {
   }, [recipes, selectedCuisine, searchQuery]);
 
   return (
-    <div>
-      <div className="mb-3">
-        <label htmlFor="cuisineSelect" className="form-label">
-          Cuisine
-        </label>
+    <div className="container mt-4">
+    {/* Search and Dropdown */}
+    <div className="row mb-4 align-items-end">
+      <div className="col-md-8 mb-2 mb-md-0">
+        <input
+          type="text"
+          id="search"
+          className="form-control"
+          placeholder="Type recipe name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+      <div className="col-md-4">
         <select
           id="cuisineSelect"
           className="form-select"
           value={selectedCuisine}
           onChange={(e) => setSelectedCuisine(e.target.value)}
         >
-          <option value="all">All</option>
+          <option value="all">All Cuisines</option>
           <option value="Italian">Italian</option>
           <option value="Mediterranean">Mediterranean</option>
           <option value="Chinese">Chinese</option>
@@ -65,38 +75,41 @@ const RecipeFilter = (props) => {
           <option value="Japanese">Japanese</option>
         </select>
       </div>
+    </div>
 
-      <div className="mb-3">
-        <label htmlFor="searchInput" className="form-label">
-          Search Recipes
-        </label>
-        <input
-          id="searchInput"
-          type="text"
-          className="form-control"
-          placeholder="Enter recipe name"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
-      <div>
-        {filteredRecipes.map((recipe) => (
-          <div key={recipe._id} className="card mb-2">
-            <div className="card-body">
+    {/* Recipe Cards */}
+    <div className="row">
+      {filteredRecipes.map((recipe) => (
+        <div key={recipe._id} className="col-md-6 col-lg-4 mb-4">
+          <div className="card h-100 shadow-sm border">
+            <img
+              src={recipe.image || 'example.png'}
+              className="card-img-top"
+              alt={recipe.name}
+              style={{ height: "200px", objectFit: "cover" }}
+            />
+            <div className="card-body d-flex flex-column">
               <h5 className="card-title">{recipe.recipeName}</h5>
-              {recipe.cuisine && (
-                <p className="card-text">
-                  <small className="text-muted">{recipe.cuisine}</small>
-                </p>
-              )}
-              {/* Render other recipe details as needed */}
+              <h6 className="card-subtitle mb-2 text-muted">
+                {recipe.cuisine}
+              </h6>
+              <p className="card-text">Level: {recipe.level}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <a href="/recipedetails" data-discover="true">
+                <button type="button" class="btn btn-sm btn-outline-success">View more...</button>
+                </a>
+              </div>            
             </div>
           </div>
-        ))}
-        {filteredRecipes.length === 0 && <p>No recipes found.</p>}
-      </div>
+        </div>
+      ))}
+      {filteredRecipes.length === 0 && (
+        <div className="col-12">
+          <p className="text-center">No recipes found.</p>
+        </div>
+      )}
     </div>
+  </div>
   );
 };
 
