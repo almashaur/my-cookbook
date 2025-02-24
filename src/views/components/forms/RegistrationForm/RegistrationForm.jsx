@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import { signUp } from '../../../../services/authService';
 import { UserContext } from '../../../../context/UserContext';
 
-
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);

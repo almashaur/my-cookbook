@@ -9,11 +9,11 @@ const MyNavbar = () => {
   const navigate = useNavigate();
 
   const logoutUser = () => {
-    alert("Logged out!!");
+    // alert("Logged out!!");
     setUser(null);
     navigate('/');
   };
-  
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
