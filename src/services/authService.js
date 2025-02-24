@@ -63,9 +63,4 @@ const signIn = async (formData) => {
     throw err;
   }
 };
-
-const logout = () => {
-  localStorage.removeItem("token");
-};
-
-export { signUp, signIn, logout };
+export { signUp, signIn };
