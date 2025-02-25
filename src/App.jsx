@@ -16,8 +16,8 @@ import Dashboard from "./views/pages/HomePage/HomePage";
 import AboutPage from "./views/pages/AboutPage/AboutPage";
 import AddRecipeForm from "./views/components/forms/AddRecipe/AddRecipe";
 import EditRecipeForm from "./views/components/forms/EditRecipe/EditRecipe";
-import MyRecipes from "./views/pages/MyRecipes/MyRecipies";
-import RecipeDetails from "./views/pages/RecipeDetails/RecipeDetails";
+import MyRecipies from "./views/pages/MyRecipes/MyRecipies";
+// import RecipeDetails from "./views/pages/RecipeDetails/RecipeDetails";
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -44,7 +44,7 @@ const App = () => {
         />
         <Route path="/editrecipes" element={<EditRecipeForm />} />
         <Route path="/addrecipes" element={<AddRecipeForm />} />
-        <Route path="/profile" element={<MyRecipes />}></Route>
+        <Route path="/profile" element={<MyRecipies />}></Route>
       </Routes>
       {/* <Footer /> */}
     </>
