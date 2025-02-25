@@ -14,6 +14,9 @@ import RegisterForm from "./views/components/forms/RegisterForm/RegisterForm";
 import AllRecipes from "./views/pages/AllRecipes/AllRecipes";
 import Dashboard from "./views/pages/HomePage/HomePage";
 import AboutPage from "./views/pages/AboutPage/AboutPage";
+import AddRecipeForm from "./views/components/forms/AddRecipe/AddRecipe"
+import EditRecipeForm from "./views/components/forms/EditRecipe/EditRecipe"
+
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -38,6 +41,8 @@ const App = () => {
           path="/allrecipes"
           element={<AllRecipes cuisine={selectedCuisine} />}
         />
+        <Route path="/editrecipes" element={<EditRecipeForm />}
+        <Route path="/addrecipes" element={<AddRecipeForm />}
       </Routes>
       {/* <Footer /> */}
     </>
