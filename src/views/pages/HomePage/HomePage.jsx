@@ -1,6 +1,6 @@
-import { useContext, useState } from 'react';
-import { UserContext } from '../../../context/UserContext';
-import { Link } from 'react-router';
+import { useContext, useState } from "react";
+import { UserContext } from "../../../context/UserContext";
+import { Link } from "react-router";
 
 const cuisines = [
   {
@@ -62,7 +62,6 @@ const cuisines = [
 const Dashboard = (props) => {
   const { user } = useContext(UserContext);
 
-
   return (
     <main>
       <div className="px-4 py-5 text-center rounded-3 shadow shadow-lg">
@@ -80,12 +79,11 @@ const Dashboard = (props) => {
             Bootstrap – the world’s most popular front-end open source toolkit.
           </p>
           <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-          <Link to="/allrecipes">
-            <button type="button" className="btn btn-info btn-lg px-4 gap-3">
-              View All Recipes
-            </button>
-          </Link>
-
+            <Link to="/allrecipes">
+              <button type="button" className="btn btn-info btn-lg px-4 gap-3">
+                View All Recipes
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -107,15 +105,18 @@ const Dashboard = (props) => {
                     <h1>{cuisine.name}</h1>
                     <p className="card-text">{cuisine.description}</p>
                     <div className="d-flex justify-content-between align-items-center">
-                    <Link to={{
-                        pathname: '/allrecipes',
-                      }}>                      
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-outline-secondary"
-                      onClick={() => props.handleCuisineClick(cuisine)}>
-                        go to cuisine
-                      </button>
+                      <Link
+                        to={{
+                          pathname: "/allrecipes",
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-secondary"
+                          onClick={() => props.handleCuisineClick(cuisine)}
+                        >
+                          go to cuisine
+                        </button>
                       </Link>
                     </div>
                   </div>
