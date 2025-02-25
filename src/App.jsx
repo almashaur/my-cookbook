@@ -16,6 +16,7 @@ import Dashboard from "./views/pages/HomePage/HomePage";
 import AboutPage from "./views/pages/AboutPage/AboutPage";
 import AddRecipeForm from "./views/components/forms/AddRecipe/AddRecipe";
 import EditRecipeForm from "./views/components/forms/EditRecipe/EditRecipe";
+import RecipeDetails from "./views/pages/RecipeDetails/RecipeDetails";
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -24,6 +25,10 @@ const App = () => {
   const handleCuisineClick = (cuisine) => {
     setSelectedCuisine(cuisine);
   };
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const handleRecipeClick = (recipe) => {
+    setSelectedRecipe(recipe);
+  }
 
   return (
     <>
@@ -39,6 +44,10 @@ const App = () => {
         <Route
           path="/allrecipes"
           element={<AllRecipes cuisine={selectedCuisine} />}
+        />
+        <Route
+          path="/recipedetails/:recipeId"
+          element={<RecipeDetails recipe={selectedRecipe} />}
         />
         <Route path="/editrecipes" element={<EditRecipeForm />} />
         <Route path="/addrecipes" element={<AddRecipeForm />} />

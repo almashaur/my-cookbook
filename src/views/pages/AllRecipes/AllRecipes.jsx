@@ -94,13 +94,12 @@ const RecipeFilter = (props) => {
                 </h6>
                 <p className="card-text">Level: {recipe.level}</p>
                 <div className="d-flex justify-content-between align-items-center">
-                  <a href="/recipedetails" data-discover="true">
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-success"
-                    >
-                      View more...
-                    </button>
+                  <a href={`/recipedetails/${recipe._id}`} data-discover="true">
+                  <button
+                          type="button"
+                          className="btn btn-sm btn-outline-secondary"
+                          onClick={() => props.handleRecipeClick(recipe._id)}
+                        />
                   </a>
                 </div>
               </div>
