@@ -14,7 +14,6 @@ import RegisterForm from "./views/components/forms/RegisterForm/RegisterForm";
 import AllRecipes from "./views/pages/AllRecipes/AllRecipes";
 import Dashboard from "./views/pages/HomePage/HomePage";
 import AboutPage from "./views/pages/AboutPage/AboutPage";
-import RecipeDetails from "./views/pages/RecipeDetails/RecipeDetails";
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -39,7 +38,6 @@ const App = () => {
           path="/allrecipes"
           element={<AllRecipes cuisine={selectedCuisine} />}
         />
-        <Route path="/recipe" element={<RecipeDetails />} />
       </Routes>
       {/* <Footer /> */}
     </>
