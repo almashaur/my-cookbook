@@ -93,7 +93,7 @@ const RecipeFilter = (props) => {
                   {recipe.cuisine}
                 </h6>
                 <p className="card-text">Level: {recipe.level}</p>
-                <div class="d-flex justify-content-between align-items-center">
+                <div className="d-flex justify-content-between align-items-center">
                   <a href="/recipedetails" data-discover="true">
                     <button
                       type="button"
