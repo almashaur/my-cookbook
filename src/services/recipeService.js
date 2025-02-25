@@ -1,75 +1,87 @@
-const BASE_URL=`${import.meta.env.VITE_BACK_END_SERVER_URL}/recipes`
+import axios from "axios";
 
-const index = async () => {
-   try {
-       const res = await fetch(BASE_URL, {
-           headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
-       })
-       return res.json();
-   } catch (error) {
-       console.log(error)
-   }
-}
+const API_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/recipes`;
 
-const create = async (formData) => {
-  try {
-      const res = await fetch(BASE_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      return res.json();
-  } catch (err) {
-      console.log(err)
-  }
+// Helper to get the authorization config
+const getAuthConfig = () => {
+  const token = localStorage.getItem("token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 };
 
-const update = async (formData, recipeId) => {
+// Create a recipe (Protected route)
+export const createRecipe = async (recipeData) => {
   try {
-      const res = await fetch(`${BASE_URL}/${recipeId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      return res.json();
-  } catch (err) {
-      console.log(err)
-  }
-};
-
-const getRecipeById = async (recipeId)=> {
-  try {
-    const res = await fetch(`${BASE_URL}/${recipeId}`,{
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(recipeId), 
-    });
-    return res.json()
-    
+    const response = await axios.post(
+      `${API_URL}/create`,
+      recipeData,
+      getAuthConfig()
+    );
+    return response.data;
   } catch (error) {
-    console.log(error) 
+    throw error.response?.data || error;
   }
+};
 
-}
-
-const deleteRecipe = async (formData,recipeId)=>{
-
+// Get all recipes
+export const getAllRecipes = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/${recipeId}`, {
-        // We specify that this is a 'POST' request
-        method: 'DELETE',
-      });
-    return res.json();
-} catch (err) {
-    console.log(err)
-}
+    const response = await axios.get(API_URL);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
 
-}
-export { create , update, deleteRecipe, getRecipeById };
+// Get a recipe by ID
+export const getRecipeById = async (recipeId) => {
+  try {
+    const response = await axios.get(`${API_URL}/${recipeId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+// Get recipes for a specific user (Protected route)
+export const getUserRecipes = async (userId) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/user/${userId}`,
+      getAuthConfig()
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+// Update a recipe by ID (Protected route)
+export const updateRecipe = async (recipeId, recipeData) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/${recipeId}`,
+      recipeData,
+      getAuthConfig()
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+// Delete a recipe by ID (Protected route)
+export const deleteRecipe = async (recipeId) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/${recipeId}`,
+      getAuthConfig()
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
