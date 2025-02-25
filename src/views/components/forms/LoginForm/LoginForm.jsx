@@ -35,40 +35,45 @@ const SignInForm = () => {
   };
 
   return (
-    <main>
-      <h1>Sign In</h1>
-      <p>{message}</p>
-      <form autoComplete='off' onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='email'>Username:</label>
-          <input
-            type='text'
-            autoComplete='off'
-            id='username'
-            value={formData.username}
-            name='username'
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor='password'>Password:</label>
-          <input
-            type='password'
-            autoComplete='off'
-            id='password'
-            value={formData.password}
-            name='password'
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <button>Sign In</button>
-          <button onClick={() => navigate('/')}>Cancel</button>
-        </div>
-      </form>
+    <main className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card p-4 shadow-lg" style={{ maxWidth: '400px', width: '100%' }}>
+        <h1 className="text-center mb-3">Login</h1>
+        <p className="text-center text-danger">{message}</p>
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <div className="form-group mb-3">
+            <label htmlFor="username" className="form-label">Username:</label>
+            <input
+              type="text"
+              autoComplete="off"
+              id="username"
+              value={formData.username}
+              name="username"
+              className="form-control"
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label htmlFor="password" className="form-label">Password:</label>
+            <input
+              type="password"
+              autoComplete="off"
+              id="password"
+              value={formData.password}
+              name="password"
+              className="form-control"
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="d-flex justify-content-between">
+            <button className="btn btn-primary w-100 me-2">Sign In</button>
+            <button className="btn btn-secondary w-100" type="button" onClick={() => navigate('/')}>Cancel</button>
+          </div>
+        </form>
+      </div>
     </main>
+
   );
 };
 
