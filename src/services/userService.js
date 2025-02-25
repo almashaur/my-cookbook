@@ -1,52 +1,37 @@
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/users`;
 
-const updateUser = async (userId, userData, token) => {
+// Helper to get the authorization config
+const getAuthConfig = () => {
+    const token = localStorage.getItem("token");
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    };
+};
+
+// Get user information and their recipes by user ID (Protected route)
+const getUserRecipes = async (userId) => {
     try {
-        const res = await fetch(`${BASE_URL}/${userId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(userData),
+        const res = await fetch(`${BASE_URL}/${userId}/recipes`, {
+            method: "GET",
+            headers: getAuthConfig(),
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-            throw new Error(data.err || "Failed to update user");
+            throw new Error(data.err || "Failed to fetch user and recipes");
         }
 
         return data;
     } catch (err) {
-        console.error("Error updating user:", err);
+        console.error("Fetch User Error:", err);
         throw err;
     }
 };
 
-const deleteUser = async (userId, token) => {
-    try {
-        const res = await fetch(`${BASE_URL}/${userId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(data.err || "Failed to delete user");
-        }
-
-        return data;
-    } catch (err) {
-        console.error("Error deleting user:", err);
-        throw err;
-    }
-};
-
-export default {
-    updateUser,
-    deleteUser,
+export {
+    getUserRecipes,
 };

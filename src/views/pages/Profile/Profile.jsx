@@ -1,12 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UserContext } from "../../../context/UserContext";
+import { getUserRecipes } from "../../../services/userService";
 
 const Profile = () => {
     const { user } = useContext(UserContext);
-    const [recipes, setRecipes] = useState([]);
-    const [refreshTrigger, setRefreshTrigger] = useState(true);
-    const navigate = useNavigate();
+    const [userData, setUserData] = useState({});
 
     useEffect(() => {
         if (!user || !user.token) {
@@ -17,8 +16,8 @@ const Profile = () => {
         const fetchUserRecipes = async () => {
             if (user) {
                 try {
-                    const data = await fetch(`recipes?owner=${user._id}`);
-                    setRecipes(data);
+                    const data = await getUserRecipes(user._id);
+                    setUserData(data);
                 } catch (err) {
                     console.error("Failed to fetch user recipes:", err);
                 }
@@ -27,24 +26,6 @@ const Profile = () => {
 
         fetchUserRecipes();
     }, [user]);
-
-    const handleAddRecipe = () => {
-        console.log("Add recipe");
-        try {
-            navigate("/create");
-        } catch (err) {
-            console.error("Failed to navigate to add recipe page:", err);
-        }
-    };
-
-    const handleEditRecipe = () => {
-        console.log("Edit recipe");
-        try {
-            navigate("/edit");
-        } catch (err) {
-            console.error("Failed to navigate to edit recipe page:", err);
-        }
-    };
 
     const handleDeleteRecipe = async (recipeId) => {
         console.log("Delete recipe");
@@ -61,18 +42,10 @@ const Profile = () => {
                 throw new Error("Failed to delete recipe");
             }
 
-            setRefreshTrigger(!refreshTrigger);
+            const data = await getUserWithRecipes(user._id);
+            setUserData(data);
         } catch (err) {
             console.error("Failed to delete recipe:", err);
-        }
-    };
-
-    const handleViewDetails = () => {
-        console.log("View details");
-        try {
-            navigate("/recipes/:id");
-        } catch (err) {
-            console.error("Failed to navigate to view details page:", err);
         }
     };
 
@@ -82,21 +55,23 @@ const Profile = () => {
             <h2>{user?.username} Recipes!</h2>
             <h3>for id {user._id}</h3>
 
-            <button onClick={handleAddRecipe}>Add Recipe</button>
-
             <div>
                 <h3>My Recipes</h3>
-                {recipes.length > 0 ? (
-                    recipes.map((recipe) => (
+                {userData?.recipes?.length > 0 ? (
+                    userData.recipes.map((recipe) => (
                         <div key={recipe._id}>
                             <h4>{recipe.recipeName}</h4>
                             <p>{recipe.cuisine}</p>
                             <p>{recipe.level}</p>
 
                             <div>
-                                <button onClick={() => handleEditRecipe(recipe._id)}>Edit</button>
+                                <Link to={`/recipes/${recipe._id}`}>
+                                    <button>View Details</button>
+                                </Link>
+                                <Link to={`edit/${recipe._id}`}>
+                                    <button>Edit</button>
+                                </Link>
                                 <button onClick={() => handleDeleteRecipe(recipe._id)}>Delete</button>
-                                <button onClick={() => handleViewDetails(recipe._id)}>View Details</button>
                             </div>
                         </div>
                     ))

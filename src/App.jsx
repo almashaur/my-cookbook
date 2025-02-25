@@ -12,6 +12,10 @@ import Navbar from './views/components/Navbar/Navbar';
 import LoginForm from './views/components/forms/LoginForm/LoginForm';
 import RegisterForm from './views/components/forms/RegisterForm/RegisterForm';
 import AllRecipes from './views/pages/AllRecipes/AllRecipes';
+import MyRecipes from './views/pages/MyRecipes/MyRecipes';
+import RecipeDetails from './views/pages/RecipeDetails/RecipeDetails';
+import AboutPage from './views/pages/AboutPage/AboutPage';
+import Profile from "./views/pages/Profile/Profile";
 
 // Test
 import Dashboard from './views/pages/HomePage/HomePage';
@@ -35,9 +39,10 @@ const App = () => {
           <Route path="/allrecipes" element={<AllRecipes cuisine={selectedCuisine} />} />
 
           <Route path="/recipes" element={<AllRecipes />} />
-          {/* <Route path="/recipes/:id" element={<RecipeDetails />} />
+          <Route path="/recipes/:id" element={<RecipeDetails />} />
           <Route path="/recipes/user/:id" element={<MyRecipes />} />
-          <Route path="/profile" element={<Profile />} /> */}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       {/* <Footer /> */}
     </>
