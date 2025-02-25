@@ -1,80 +1,151 @@
-import { useContext, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { getUserRecipes, deleteRecipe } from "../../../services/recipeService";
 import { UserContext } from "../../../context/UserContext";
-import { getUserRecipes } from "../../../services/userService";
 
-const MyRecipes = () => {
+const MyRecipies = (props) => {
+  const propResult = props.cuisine?.name ? `${props.cuisine.name}` : "all";
+
   const { user } = useContext(UserContext);
-  const [userData, setUserData] = useState({});
-  
+  // const [user] = useState({});
+  const [recipes, setRecipes] = useState([]);
+  const [selectedCuisine, setSelectedCuisine] = useState(`${propResult}`);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+
+  // Fetch recipes when the component mounts
   useEffect(() => {
-    if (!user || !user.token) {
-      console.error("No user or token found.");
-      return;
-    }
-    const fetchUserRecipes = async () => {
-      if (user) {
-        try {
-          const data = await getUserRecipes(user._id);
-          setUserData(data);
-        } catch (err) {
-          console.error("Failed to fetch user recipes:", err);
-        }
+    const fetchRecipes = async () => {
+      try {
+        const data = await getUserRecipes(user._id);
+        setRecipes(data);
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
       }
     };
-    fetchUserRecipes();
-  }, [user]);
 
-  const handleDeleteRecipe = async (recipeId) => {
-    console.log("Delete recipe");
+    fetchRecipes();
+  }, []);
+
+  // Update filtered recipes whenever recipes, selectedCuisine, or searchQuery changes
+  useEffect(() => {
+    const lowerCaseSearch = searchQuery.toLowerCase();
+    const filtered = recipes.filter((recipe) => {
+      // Check cuisine filter
+      const matchesCuisine =
+        selectedCuisine === "all" ||
+        recipe.cuisine?.toLowerCase() === selectedCuisine.toLowerCase();
+      // Check recipe name loose search (case-insensitive substring match)
+      const matchesSearch = recipe.recipeName
+        .toLowerCase()
+        .includes(lowerCaseSearch);
+      return matchesCuisine && matchesSearch;
+    });
+
+    setFilteredRecipes(filtered);
+  }, [recipes, selectedCuisine, searchQuery]);
+
+  const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/recipes/${recipeId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete recipe");
-      }
+      await deleteRecipe(id);
       const data = await getUserRecipes(user._id);
-      setUserData(data);
-    } catch (err) {
-      console.error("Failed to delete recipe:", err);
-    }
-  };
+      setRecipes(data);
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+  }
+};
+
 
   return (
-    <div>
-      <h1>My Profile</h1>
-      <h2>{user?.username} Recipes!</h2>
-      <h3>for id {user._id}</h3>
-      <div>
-        <h3>My Recipes</h3>
-        {userData?.recipes?.length > 0 ? (
-          userData.recipes.map((recipe) => (
-            <div key={recipe._id}>
-              <h4>{recipe.recipeName}</h4>
-              <p>{recipe.cuisine}</p>
-              <p>{recipe.level}</p>
-              <div>
-                <Link to={`/recipes/${recipe._id}`}>
-                  <button>View Details</button>
-                </Link>
-                <Link to={`edit/${recipe._id}`}>
-                  <button>Edit</button>
-                </Link>
-                <button onClick={() => handleDeleteRecipe(recipe._id)}>Delete</button>
+    <div className="container mt-4">
+      {/* Search and Dropdown */}
+      <div className="row mb-4 align-items-end">
+        <div className="col-md-8 mb-2 mb-md-0">
+          <input
+            type="text"
+            id="search"
+            className="form-control"
+            placeholder="Type recipe name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="col-md-4">
+          <select
+            id="cuisineSelect"
+            className="form-select"
+            value={selectedCuisine}
+            onChange={(e) => setSelectedCuisine(e.target.value)}
+          >
+            <option value="all">All Cuisines</option>
+            <option value="Italian">Italian</option>
+            <option value="Mediterranean">Mediterranean</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Indian">Indian</option>
+            <option value="Thai">Thai</option>
+            <option value="American">American</option>
+            <option value="French">French</option>
+            <option value="Japanese">Japanese</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Recipe Cards */}
+      <div className="row">
+        {filteredRecipes.map((recipe) => (
+          <div key={recipe._id} className="col-md-6 col-lg-4 mb-4">
+            <div className="card h-100 shadow-sm border">
+              <img
+                src={recipe.image || "example.png"}
+                className="card-img-top"
+                alt={recipe.name}
+                style={{ height: "200px", objectFit: "cover" }}
+              />
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title">{recipe.recipeName}</h5>
+                <h6 className="card-subtitle mb-2 text-muted">
+                  {recipe.cuisine}
+                </h6>
+                <p className="card-text">Level: {recipe.level}</p>
+                <div className="d-flex justify-content-between align-items-center">
+                  <a href="/recipedetails" data-discover="true">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-success"
+                    >
+                      View more...
+                    </button>
+                  </a>
+                  <div>
+                  <a href="/editrecipe/" data-discover="true">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-warning"
+                    >
+                      Edit
+                    </button>
+                  </a>
+                  <button
+                      type="button"
+                      className="btn btn-sm btn-outline-danger m-2"
+                      onClick={() => handleDelete(recipe._id)}
+                    >
+                      Delete
+                    </button>
+                    </div>
+                </div>
               </div>
             </div>
-          ))
-        ) : (
-          <p>No recipes found. Add a new recipe!</p>
+          </div>
+        ))}
+        {filteredRecipes.length === 0 && (
+          <div className="col-12">
+            <p className="text-center">No recipes found.</p>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default MyRecipes;
+export default MyRecipies;
