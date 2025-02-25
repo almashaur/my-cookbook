@@ -11,10 +11,10 @@ const Footer = () => {
 
                 <ul className="nav col-md-4 justify-content-end">
                     <li className="nav-item">
-                        <a href="/" className="nav-link px-2 text-body-secondary">Home</a>
+                        <a href="#" className="nav-link px-2 text-body-secondary">Home</a>
                     </li>
                     <li className="nav-item">
-                        <a href="recipes" className="nav-link px-2 text-body-secondary">All recipes</a>
+                        <a href="#" className="nav-link px-2 text-body-secondary">All recipes</a>
                     </li>
                     <li className="nav-item">
                         <a href="#" className="nav-link px-2 text-body-secondary">About</a>

@@ -79,7 +79,8 @@ const Profile = () => {
     return (
         <div>
             <h1>My Profile</h1>
-            <h2>Welcome, {user?.username}!</h2>
+            <h2>{user?.username} Recipes!</h2>
+            <h3>for id {user._id}</h3>
 
             <button onClick={handleAddRecipe}>Add Recipe</button>
 

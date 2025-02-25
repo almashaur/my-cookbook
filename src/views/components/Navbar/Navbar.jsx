@@ -8,12 +8,11 @@ const MyNavbar = () => {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const logoutUser = () => {
-    // alert("Logged out!!");
-    setUser(null);
-    navigate('/');
-  };
-
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      window.location.reload();
+      };
+  
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
@@ -23,13 +22,13 @@ const MyNavbar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/recipes">Recipes</Nav.Link>
+            <Nav.Link as={Link} to="/allrecipes">Recipes</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
           </Nav>
           {user ? (
             <Nav>
               <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
-              <Nav.Link as="button" onClick={logoutUser}>Logout</Nav.Link>
+              <Nav.Link as="button" onClick={handleLogout}>Logout</Nav.Link>
             </Nav>
           ) : (
             <Nav>
