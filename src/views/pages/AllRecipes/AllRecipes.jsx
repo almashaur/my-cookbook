@@ -97,7 +97,7 @@ const RecipeFilter = (props) => {
                   <a href="/recipedetails" data-discover="true">
                     <button
                       type="button"
-                      class="btn btn-sm btn-outline-success"
+                      className="btn btn-sm btn-outline-success"
                     >
                       View more...
                     </button>
