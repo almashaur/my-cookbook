@@ -7,10 +7,18 @@ import { createRecipe, updateRecipe } from "../../../../services/recipeService";
 const AddRecipeForm = ({ recipe }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+
+  // Early return if user is not logged in
+  if (!user) {
+    return (
+      <p className="text-center mt-5">Please log in to add or edit a recipe.</p>
+    );
+  }
+
   const [message, setMessage] = useState("");
   const [selectedTools, setSelectedTools] = useState([]);
 
-  // Initial Form State
+  // Use user._id from your UserContext (which returns decoded.payload)
   const initialState = {
     recipeName: "",
     ingredients: [],
@@ -20,72 +28,63 @@ const AddRecipeForm = ({ recipe }) => {
     tools: [],
     image: "",
     serves: 1,
-    owner: user._id,
+    owner: user._id, // user is now guaranteed to exist
   };
 
   const ingredientInitialState = {
     ingredientName: "",
     amount: "",
-    alternatives: "", // Fixed field name
+    alternatives: "",
   };
 
   const [formData, setFormData] = useState(initialState);
   const [ingredientList, setIngredientList] = useState([
     ingredientInitialState,
   ]);
-// Edit recipe data 
+
   useEffect(() => {
     if (recipe) {
-      if (recipe.tools) {
-        const formattedTools = recipe.tools.map((tool) => ({
-          value: tool,
-          label: tool,
-        }));
-        setSelectedTools(formattedTools)
-        
-      }
+      const formattedTools = recipe.tools.map((tool) => ({
+        value: tool,
+        label: tool,
+      }));
+      setSelectedTools(formattedTools);
       setFormData({
         recipeName: recipe.recipeName,
         level: recipe.level,
         cuisine: recipe.cuisine,
         owner: recipe.owner,
         image: recipe.image,
-        serves: recipe.serves || '1',
+        serves: recipe.serves || 1,
         instructions: recipe.instructions,
-        tools:selectedTools || []
+        tools: recipe.tools,
+        ingredients: recipe.ingredients,
       });
-      setIngredientList(recipe.ingredients || [ingredientInitialState])
-      // setSelectedTools(recipe.tools?.map(tool => ({ value: tool, label: tool })) || []);
-      
-    
+      setIngredientList(recipe.ingredients || [ingredientInitialState]);
     }
   }, [recipe]);
-
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setMessage("");
     setFormData({
       ...formData,
-      [name]: name === "serves" ? Number(value) : value, // Ensure serves is a number
+      [name]: name === "serves" ? Number(value) : value,
     });
   };
 
-  // Handle Ingredient Changes
   const handleIngredientChange = (event, index) => {
     const { name, value } = event.target;
     const list = [...ingredientList];
     list[index][name] = value;
     setIngredientList(list);
-    setFormData({ ...formData, ingredients: list }); // Sync with form data
+    setFormData({ ...formData, ingredients: list });
   };
 
-  // Add Ingredient
   const handleIngredientAdd = () => {
     setIngredientList([...ingredientList, ingredientInitialState]);
   };
 
-  // Remove Ingredient
   const handleIngredientRemove = (index) => {
     const list = [...ingredientList];
     list.splice(index, 1);
@@ -93,64 +92,52 @@ const AddRecipeForm = ({ recipe }) => {
     setFormData({ ...formData, ingredients: list });
   };
 
-  // Handle Tools Selection
   const handleToolsChange = (selectedOptions) => {
-    const toolsArray = selectedOptions.map((tool) => tool.value);
+    const toolsArray = selectedOptions.map((option) => option.value);
     setSelectedTools(selectedOptions);
-    if(recipe){
-      setSelectedTools(selectedOptions)
-    }else{
     setFormData({ ...formData, tools: toolsArray });
-  }
-};
+  };
 
-  // Handle Form Submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const newFormData = { ...formData };
-      if(recipe){
-        setSelectedTools(selectedTools)
-        await updateRecipe(recipe._id,newFormData, {
-          headers: { "Cache-Control": "no-cache" }, // Fix: Prevent 304 caching
-        })
-        // navigate(`/recipes/${recipe._id}`); // Redirect on success
-      }else{
-        await createRecipe(newFormData,{
-          headers: { "Cache-Control": "no-cache" }, // Fix: Prevent 304 caching
+      if (recipe) {
+        await updateRecipe(recipe._id, formData, {
+          headers: { "Cache-Control": "no-cache" },
         });
-        console.log("Submitting:", newFormData);
-        setFormData(initialState)
-        setIngredientList([ingredientInitialState])
-        navigate("/allrecipes"); // Redirect on success
+        navigate(`/recipedetails/${recipe._id}`);
+      } else {
+        await createRecipe(formData, {
+          headers: { "Cache-Control": "no-cache" },
+        });
+        navigate("/allrecipes");
       }
-
     } catch (error) {
       setMessage(error.response?.data?.error || "An error occurred");
     }
   };
 
   return (
-    <main className="d-flex align-items-center justify-content-center min-vh-100">
+    <main className="d-flex align-items-center justify-content-center min-vh-100 bg-light">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <div className="card shadow p-4 rounded">
-              <h1 className="text-center mb-4">{ recipe ? 'Edit Recipe':'Add Recipe'}</h1>
+          <div className="col-lg-10">
+            <div className="card shadow p-4">
+              <h2 className="text-center mb-4">
+                {recipe ? "Edit Recipe" : "Add Recipe"}
+              </h2>
               {message && <div className="alert alert-danger">{message}</div>}
-
               <form autoComplete="off" onSubmit={handleSubmit}>
-                {/* Owner */}
+                {/* Owner (readonly) */}
                 <div className="mb-3">
                   <label className="form-label">Owner</label>
                   <input
                     type="text"
                     className="form-control"
-                    value={formData.owner}
+                    value={user.username}
                     disabled
                   />
                 </div>
-
                 {/* Recipe Name */}
                 <div className="mb-3">
                   <label className="form-label">Recipe Name</label>
@@ -163,7 +150,6 @@ const AddRecipeForm = ({ recipe }) => {
                     required
                   />
                 </div>
-
                 {/* Level */}
                 <div className="mb-3">
                   <label className="form-label">Level</label>
@@ -180,7 +166,6 @@ const AddRecipeForm = ({ recipe }) => {
                     <option value="professional">Professional</option>
                   </select>
                 </div>
-
                 {/* Cuisine */}
                 <div className="mb-3">
                   <label className="form-label">Cuisine</label>
@@ -203,7 +188,6 @@ const AddRecipeForm = ({ recipe }) => {
                     <option value="Japanese">Japanese</option>
                   </select>
                 </div>
-
                 {/* Tools */}
                 <div className="mb-3">
                   <label className="form-label">Tools</label>
@@ -213,8 +197,7 @@ const AddRecipeForm = ({ recipe }) => {
                     onChange={handleToolsChange}
                   />
                 </div>
-
-                {/* Image */}
+                {/* Image URL */}
                 <div className="mb-3">
                   <label className="form-label">Image URL</label>
                   <input
@@ -226,7 +209,6 @@ const AddRecipeForm = ({ recipe }) => {
                     required
                   />
                 </div>
-
                 {/* Serves */}
                 <div className="mb-3">
                   <label className="form-label">Serves</label>
@@ -240,9 +222,8 @@ const AddRecipeForm = ({ recipe }) => {
                     required
                   />
                 </div>
-
                 {/* Ingredients */}
-                <h3>Ingredients</h3>
+                <h4>Ingredients</h4>
                 {ingredientList.map((ingredient, index) => (
                   <div key={index} className="mb-2 d-flex align-items-center">
                     <input
@@ -289,7 +270,6 @@ const AddRecipeForm = ({ recipe }) => {
                 >
                   Add Ingredient
                 </button>
-
                 {/* Instructions */}
                 <div className="mb-3">
                   <label className="form-label">Instructions</label>
@@ -299,12 +279,11 @@ const AddRecipeForm = ({ recipe }) => {
                     value={formData.instructions}
                     onChange={handleChange}
                     required
+                    rows="5"
                   />
                 </div>
-
-                {/* Submit Button */}
                 <button type="submit" className="btn btn-success w-100">
-                  { recipe? 'Update Recipe' : 'Add Recipe'}
+                  {recipe ? "Update Recipe" : "Add Recipe"}
                 </button>
               </form>
             </div>
