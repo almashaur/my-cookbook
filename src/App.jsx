@@ -49,7 +49,7 @@ const App = () => {
           path="/recipedetails/:recipeId"
           element={<RecipeDetails recipe={selectedRecipe} />}
         />
-        <Route path="/editrecipes" element={<EditRecipeForm />} />
+        <Route path="/editrecipes/:recipeId" element={<EditRecipeForm />} />
         <Route path="/addrecipes" element={<AddRecipeForm />} />
       </Routes>
       {/* <Footer /> */}

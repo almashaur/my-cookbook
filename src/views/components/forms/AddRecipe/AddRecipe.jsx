@@ -1,10 +1,10 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../../../context/UserContext";
 import DropDownList from "../../forms/DropDownList/DropDownList";
 import { createRecipe, updateRecipe } from "../../../../services/recipeService";
 
-const AddRecipeForm = () => {
+const AddRecipeForm = ({ recipe }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("");
@@ -20,7 +20,7 @@ const AddRecipeForm = () => {
     tools: [],
     image: "",
     serves: 1,
-    owner: user.username,
+    owner: user._id,
   };
 
   const ingredientInitialState = {
@@ -33,8 +33,35 @@ const AddRecipeForm = () => {
   const [ingredientList, setIngredientList] = useState([
     ingredientInitialState,
   ]);
+// Edit recipe data 
+  useEffect(() => {
+    if (recipe) {
+      if (recipe.tools) {
+        const formattedTools = recipe.tools.map((tool) => ({
+          value: tool,
+          label: tool,
+        }));
+        setSelectedTools(formattedTools)
+        
+      }
+      setFormData({
+        recipeName: recipe.recipeName,
+        level: recipe.level,
+        cuisine: recipe.cuisine,
+        owner: recipe.owner,
+        image: recipe.image,
+        serves: recipe.serves || '1',
+        instructions: recipe.instructions,
+        tools:selectedTools || []
+      });
+      setIngredientList(recipe.ingredients || [ingredientInitialState])
+      // setSelectedTools(recipe.tools?.map(tool => ({ value: tool, label: tool })) || []);
+      
+    
+    }
+  }, [recipe]);
 
-  // Handle Input Changes
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setMessage("");
@@ -70,18 +97,34 @@ const AddRecipeForm = () => {
   const handleToolsChange = (selectedOptions) => {
     const toolsArray = selectedOptions.map((tool) => tool.value);
     setSelectedTools(selectedOptions);
+    if(recipe){
+      setSelectedTools(selectedOptions)
+    }else{
     setFormData({ ...formData, tools: toolsArray });
-  };
+  }
+};
 
   // Handle Form Submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const newFormData = { ...formData };
-      console.log("Submitting:", newFormData);
+      if(recipe){
+        setSelectedTools(selectedTools)
+        await updateRecipe(recipe._id,newFormData, {
+          headers: { "Cache-Control": "no-cache" }, // Fix: Prevent 304 caching
+        })
+        // navigate(`/recipes/${recipe._id}`); // Redirect on success
+      }else{
+        await createRecipe(newFormData,{
+          headers: { "Cache-Control": "no-cache" }, // Fix: Prevent 304 caching
+        });
+        console.log("Submitting:", newFormData);
+        setFormData(initialState)
+        setIngredientList([ingredientInitialState])
+        navigate("/allrecipes"); // Redirect on success
+      }
 
-      await createRecipe(newFormData);
-      navigate("/allrecipes"); // Redirect on success
     } catch (error) {
       setMessage(error.response?.data?.error || "An error occurred");
     }
@@ -93,7 +136,7 @@ const AddRecipeForm = () => {
         <div className="row justify-content-center">
           <div className="col-lg-8">
             <div className="card shadow p-4 rounded">
-              <h1 className="text-center mb-4">Add Recipe</h1>
+              <h1 className="text-center mb-4">{ recipe ? 'Edit Recipe':'Add Recipe'}</h1>
               {message && <div className="alert alert-danger">{message}</div>}
 
               <form autoComplete="off" onSubmit={handleSubmit}>
@@ -261,7 +304,7 @@ const AddRecipeForm = () => {
 
                 {/* Submit Button */}
                 <button type="submit" className="btn btn-success w-100">
-                  Add Recipe
+                  { recipe? 'Update Recipe' : 'Add Recipe'}
                 </button>
               </form>
             </div>
