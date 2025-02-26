@@ -1,50 +1,56 @@
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getRecipeById } from "../../../../services/recipeService";
+import { UserContext } from "../../../../context/UserContext";
+import AddRecipeForm from "../AddRecipe/AddRecipe";
 
-import { useState, useContext, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import {  getRecipeById } from '../../../../services/recipeService';
-import { Link } from "react-router-dom";
-import AddRecipeForm from '../AddRecipe/AddRecipe'
-import { UserContext } from '../../../../context/UserContext';
 const EditRecipePage = () => {
-    const { recipeId } = useParams();
-    const navigate = useNavigate();
-    const [recipeData, setRecipeData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [message, setMessage] = useState('');
-    const { user} = useContext(UserContext)
-    useEffect(() => {
-        const fetchRecipe = async () => {
-            try {
-                const fetchedRecipe = await getRecipeById(recipeId);
-                fetchRecipe.owner= user.username;
-                console.log(fetchedRecipe)
-                setRecipeData(fetchedRecipe);
-            } catch (error) {
-               setMessage("Error fetching recipe:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        if (recipeId) {
-            fetchRecipe();
-        }
-    }, [recipeId]);
+  const { recipeId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+  const [recipeData, setRecipeData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
-    if (loading) {
-        return <div>Loading...</div>; 
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const fetchedRecipe = await getRecipeById(recipeId);
+        setRecipeData(fetchedRecipe);
+      } catch (error) {
+        setMessage("Error fetching recipe");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (recipeId) {
+      fetchRecipe();
     }
+  }, [recipeId]);
 
+  if (loading) {
     return (
-        <div>
-            {recipeData ? (
-                <AddRecipeForm recipe={recipeData} navigate={navigate} /> 
-            ) : (
-                <div>Error: Recipe not found.</div>
-            )}
-
-            {/* <AddRecipeForm recipe={recipe} navigate={navigate} />  */}
-        </div>
+      <div className="container my-5 text-center">
+        <p>Loading...</p>
+      </div>
     );
+  }
+
+  if (!recipeData) {
+    return (
+      <div className="container my-5 text-center">
+        <p>Error: Recipe not found.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container my-5">
+      <AddRecipeForm recipe={recipeData} />
+    </div>
+  );
 };
 
 export default EditRecipePage;

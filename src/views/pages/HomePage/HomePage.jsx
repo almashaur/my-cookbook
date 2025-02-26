@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../../context/UserContext";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const cuisines = [
   {
@@ -64,7 +64,8 @@ const Dashboard = (props) => {
 
   return (
     <main>
-      <div className="px-4 py-5 text-center rounded-3 shadow shadow-lg">
+      {/* Hero Section */}
+      <div className="px-4 py-5 text-center rounded-3 shadow-lg">
         <img
           className="d-block mx-auto mb-4"
           src="/icons8-cookbook-50.png"
@@ -72,7 +73,7 @@ const Dashboard = (props) => {
           width="72"
           height="57"
         />
-        <h1 className="display-5 fw-bold">My cookbook</h1>
+        <h1 className="display-5 fw-bold">My Cookbook</h1>
         <div className="col-lg-6 mx-auto">
           <p className="lead mb-4">
             Quickly design and customize responsive mobile-first sites with
@@ -88,12 +89,13 @@ const Dashboard = (props) => {
         </div>
       </div>
 
-      <div className="album py-5 bg-light">
+      {/* Cuisine Cards */}
+      <section className="album py-5 bg-light">
         <div className="container">
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {cuisines.map((cuisine, index) => (
               <div className="col" key={index}>
-                <div className="card shadow-sm">
+                <div className="card shadow-sm h-100">
                   <img
                     className="card-img-top"
                     src={cuisine.image}
@@ -101,21 +103,17 @@ const Dashboard = (props) => {
                     width="100%"
                     height="225"
                   />
-                  <div className="card-body">
-                    <h1>{cuisine.name}</h1>
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{cuisine.name}</h5>
                     <p className="card-text">{cuisine.description}</p>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <Link
-                        to={{
-                          pathname: "/allrecipes",
-                        }}
-                      >
+                    <div className="mt-auto d-flex justify-content-between align-items-center">
+                      <Link to="/allrecipes">
                         <button
                           type="button"
                           className="btn btn-sm btn-outline-secondary"
                           onClick={() => props.handleCuisineClick(cuisine)}
                         >
-                          go to cuisine
+                          Go to Cuisine
                         </button>
                       </Link>
                     </div>
@@ -125,7 +123,7 @@ const Dashboard = (props) => {
             ))}
           </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 };

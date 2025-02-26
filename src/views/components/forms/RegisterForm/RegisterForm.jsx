@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { signUp } from "../../../../services/authService";
 import { UserContext } from "../../../../context/UserContext";
 
@@ -13,8 +13,6 @@ const SignUpForm = () => {
     passwordConf: "",
   });
 
-  const { username, password, passwordConf } = formData;
-
   const handleChange = (evt) => {
     setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
@@ -22,7 +20,6 @@ const SignUpForm = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    console.log(formData);
     try {
       const newUser = await signUp(formData);
       setUser(newUser);
@@ -31,71 +28,77 @@ const SignUpForm = () => {
       setMessage(err.message);
     }
   };
+
   const isFormInvalid = () => {
-    return !(username && password && password === passwordConf);
+    return !(
+      formData.username &&
+      formData.password &&
+      formData.password === formData.passwordConf
+    );
   };
 
   return (
-    <main className="d-flex justify-content-center align-items-center vh-100">
+    <main className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <div
-        className="card p-4 shadow-lg"
+        className="card shadow-lg p-4"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <h1 className="text-center mb-3">Sign Up</h1>
-        <p className="text-center text-danger">{message}</p>
+        <h2 className="text-center mb-3">Sign Up</h2>
+        {message && <div className="alert alert-danger">{message}</div>}
         <form onSubmit={handleSubmit}>
-          <div className="form-group mb-3">
+          <div className="mb-3">
             <label htmlFor="username" className="form-label">
-              Username:
+              Username
             </label>
             <input
               type="text"
-              id="name"
-              value={username}
+              id="username"
               name="username"
               className="form-control"
+              value={formData.username}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="mb-3">
             <label htmlFor="password" className="form-label">
-              Password:
+              Password
             </label>
             <input
               type="password"
               id="password"
-              value={password}
               name="password"
               className="form-control"
+              value={formData.password}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="form-group mb-3">
-            <label htmlFor="confirm" className="form-label">
-              Confirm Password:
+          <div className="mb-3">
+            <label htmlFor="passwordConf" className="form-label">
+              Confirm Password
             </label>
             <input
               type="password"
-              id="confirm"
-              value={passwordConf}
+              id="passwordConf"
               name="passwordConf"
               className="form-control"
+              value={formData.passwordConf}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="d-flex justify-content-between">
+          <div className="d-flex">
             <button
-              className="btn btn-primary w-100 me-2"
+              type="submit"
+              className="btn btn-primary w-50 me-2"
               disabled={isFormInvalid()}
             >
               Sign Up
             </button>
             <button
-              className="btn btn-secondary w-100"
               type="button"
+              className="btn btn-secondary w-50"
               onClick={() => navigate("/")}
             >
               Cancel

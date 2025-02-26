@@ -2,17 +2,11 @@ import axios from "axios";
 
 const API_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/users`;
 
-// Helper to get the authorization config
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 };
 
-// Get a user by ID (Protected route)
 export const getUserById = async (userId) => {
   try {
     const response = await axios.get(`${API_URL}/${userId}`, getAuthConfig());
@@ -22,7 +16,6 @@ export const getUserById = async (userId) => {
   }
 };
 
-// Update a user by ID (Protected route)
 export const updateUser = async (userId, userData) => {
   try {
     const response = await axios.put(
@@ -36,7 +29,6 @@ export const updateUser = async (userId, userData) => {
   }
 };
 
-// Delete a user by ID (Protected route)
 export const deleteUser = async (userId) => {
   try {
     const response = await axios.delete(

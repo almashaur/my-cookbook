@@ -1,18 +1,13 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router";
-
+import { useNavigate } from "react-router-dom";
 import { signIn } from "../../../../services/authService";
-
 import { UserContext } from "../../../../context/UserContext";
 
 const SignInForm = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   const [message, setMessage] = useState("");
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ username: "", password: "" });
 
   const handleChange = (evt) => {
     setMessage("");
@@ -22,10 +17,7 @@ const SignInForm = () => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     try {
-      // This function doesn't exist yet, but we'll create it soon.
-      // It will cause an error right now
       const signedInUser = await signIn(formData);
-
       setUser(signedInUser);
       navigate("/");
     } catch (err) {
@@ -34,49 +26,49 @@ const SignInForm = () => {
   };
 
   return (
-    <main className="d-flex justify-content-center align-items-center vh-100">
+    <main className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <div
-        className="card p-4 shadow-lg"
+        className="card shadow-lg p-4"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <h1 className="text-center mb-3">Login</h1>
-        <p className="text-center text-danger">{message}</p>
+        <h2 className="text-center mb-3">Sign In</h2>
+        {message && <div className="alert alert-danger">{message}</div>}
         <form autoComplete="off" onSubmit={handleSubmit}>
-          <div className="form-group mb-3">
+          <div className="mb-3">
             <label htmlFor="username" className="form-label">
-              Username:
+              Username
             </label>
             <input
               type="text"
               autoComplete="off"
               id="username"
-              value={formData.username}
               name="username"
               className="form-control"
+              value={formData.username}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="mb-3">
             <label htmlFor="password" className="form-label">
-              Password:
+              Password
             </label>
             <input
               type="password"
               autoComplete="off"
               id="password"
-              value={formData.password}
               name="password"
               className="form-control"
+              value={formData.password}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="d-flex justify-content-between">
-            <button className="btn btn-primary w-100 me-2">Sign In</button>
+          <div className="d-flex">
+            <button className="btn btn-primary w-50 me-2">Sign In</button>
             <button
-              className="btn btn-secondary w-100"
               type="button"
+              className="btn btn-secondary w-50"
               onClick={() => navigate("/")}
             >
               Cancel

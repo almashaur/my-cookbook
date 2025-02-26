@@ -2,17 +2,11 @@ import axios from "axios";
 
 const API_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/recipes`;
 
-// Helper to get the authorization config
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 };
 
-// Create a recipe (Protected route)
 export const createRecipe = async (recipeData) => {
   try {
     const response = await axios.post(
@@ -26,7 +20,6 @@ export const createRecipe = async (recipeData) => {
   }
 };
 
-// Get all recipes
 export const getAllRecipes = async () => {
   try {
     const response = await axios.get(API_URL);
@@ -36,7 +29,6 @@ export const getAllRecipes = async () => {
   }
 };
 
-// Get a recipe by ID
 export const getRecipeById = async (recipeId) => {
   try {
     const response = await axios.get(`${API_URL}/${recipeId}`);
@@ -46,7 +38,6 @@ export const getRecipeById = async (recipeId) => {
   }
 };
 
-// Get recipes for a specific user (Protected route)
 export const getUserRecipes = async (userId) => {
   try {
     const response = await axios.get(
@@ -59,7 +50,6 @@ export const getUserRecipes = async (userId) => {
   }
 };
 
-// Update a recipe by ID (Protected route)
 export const updateRecipe = async (recipeId, recipeData) => {
   try {
     const response = await axios.put(
@@ -73,7 +63,6 @@ export const updateRecipe = async (recipeId, recipeData) => {
   }
 };
 
-// Delete a recipe by ID (Protected route)
 export const deleteRecipe = async (recipeId) => {
   try {
     const response = await axios.delete(

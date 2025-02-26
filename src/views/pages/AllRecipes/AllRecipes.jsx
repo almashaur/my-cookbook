@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getAllRecipes } from "../../../services/recipeService";
 
 const RecipeFilter = (props) => {
-  const propResult = props.cuisine?.name ? `${props.cuisine.name}` : "all";
+  // Set the initial cuisine filter based on props if available; otherwise default to "all"
+  const initialCuisine = props.cuisine?.name ? props.cuisine.name : "all";
 
   const [recipes, setRecipes] = useState([]);
-  const [selectedCuisine, setSelectedCuisine] = useState(`${propResult}`);
+  const [selectedCuisine, setSelectedCuisine] = useState(initialCuisine);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
@@ -31,7 +33,7 @@ const RecipeFilter = (props) => {
       const matchesCuisine =
         selectedCuisine === "all" ||
         recipe.cuisine?.toLowerCase() === selectedCuisine.toLowerCase();
-      // Check recipe name loose search (case-insensitive substring match)
+      // Check recipe name with a case-insensitive substring match
       const matchesSearch = recipe.recipeName
         .toLowerCase()
         .includes(lowerCaseSearch);
@@ -43,7 +45,7 @@ const RecipeFilter = (props) => {
 
   return (
     <div className="container mt-4">
-      {/* Search and Dropdown */}
+      {/* Search and Filter Controls */}
       <div className="row mb-4 align-items-end">
         <div className="col-md-8 mb-2 mb-md-0">
           <input
@@ -84,7 +86,7 @@ const RecipeFilter = (props) => {
               <img
                 src={recipe.image || "example.png"}
                 className="card-img-top"
-                alt={recipe.name}
+                alt={recipe.recipeName}
                 style={{ height: "200px", objectFit: "cover" }}
               />
               <div className="card-body d-flex flex-column">
@@ -93,14 +95,19 @@ const RecipeFilter = (props) => {
                   {recipe.cuisine}
                 </h6>
                 <p className="card-text">Level: {recipe.level}</p>
-                <div className="d-flex justify-content-between align-items-center">
-                  <a href={`/recipedetails/${recipe._id}`} data-discover="true">
-                  <button
-                          type="button"
-                          className="btn btn-sm btn-outline-secondary"
-                          onClick={() => props.handleRecipeClick(recipe._id)}
-                        />
-                  </a>
+                <div className="mt-auto d-flex justify-content-between align-items-center">
+                  <Link
+                    to={`/recipedetails/${recipe._id}`}
+                    data-discover="true"
+                  >
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={() => props.handleRecipeClick(recipe._id)}
+                    >
+                      View Recipe
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
