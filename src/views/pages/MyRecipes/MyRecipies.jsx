@@ -51,100 +51,118 @@ const MyRecipies = (props) => {
       setRecipes(data);
     } catch (error) {
       console.error("Error deleting recipe:", error);
-  }
-};
-
+    }
+  };
 
   return (
-    <div className="container mt-4">
-      {/* Search and Dropdown */}
-      <div className="row mb-4 align-items-end">
-        <div className="col-md-8 mb-2 mb-md-0">
-          <input
-            type="text"
-            id="search"
-            className="form-control"
-            placeholder="Type recipe name..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="col-md-4">
-          <select
-            id="cuisineSelect"
-            className="form-select"
-            value={selectedCuisine}
-            onChange={(e) => setSelectedCuisine(e.target.value)}
-          >
-            <option value="all">All Cuisines</option>
-            <option value="Italian">Italian</option>
-            <option value="Mediterranean">Mediterranean</option>
-            <option value="Chinese">Chinese</option>
-            <option value="Mexican">Mexican</option>
-            <option value="Indian">Indian</option>
-            <option value="Thai">Thai</option>
-            <option value="American">American</option>
-            <option value="French">French</option>
-            <option value="Japanese">Japanese</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Recipe Cards */}
-      <div className="row">
-        {filteredRecipes.map((recipe) => (
-          <div key={recipe._id} className="col-md-6 col-lg-4 mb-4">
-            <div className="card h-100 shadow-sm border">
-              <img
-                src={recipe.image || "example.png"}
-                className="card-img-top"
-                alt={recipe.name}
-                style={{ height: "200px", objectFit: "cover" }}
+    <>
+      <div class="px-4 py-5 my-5 text-center">
+        <img
+          class="d-block mx-auto mb-4"
+          src="/icons8-cookbook-50.png"
+          alt=""
+          width="72"
+          height="57"
+        />
+        <h1 class="display-5 fw-bold">Welcome back, {user.username}</h1>
+        <div class="col-lg-6 mx-auto">
+          {/* Search and Dropdown */}
+          <div className="row mb-4 align-items-end">
+            <div className="col-md-8 mb-2 mb-md-0">
+              <input
+                type="text"
+                id="search"
+                className="form-control"
+                placeholder="Type recipe name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{recipe.recipeName}</h5>
-                <h6 className="card-subtitle mb-2 text-muted">
-                  {recipe.cuisine}
-                </h6>
-                <p className="card-text">Level: {recipe.level}</p>
-                <div className="d-flex justify-content-between align-items-center">
-                  <a href="/recipedetails" data-discover="true">
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-success"
-                    >
-                      View more...
-                    </button>
-                  </a>
-                  <div>
-                  <a href="/editrecipe/" data-discover="true">
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-warning"
-                    >
-                      Edit
-                    </button>
-                  </a>
-                  <button
-                      type="button"
-                      className="btn btn-sm btn-outline-danger m-2"
-                      onClick={() => handleDelete(recipe._id)}
-                    >
-                      Delete
-                    </button>
+            </div>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+              <button type="button" class="btn btn-primary btn-lg px-4 gap-3">
+                Add Recipe
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="container mt-4">
+          <div className="col-md-4">
+            <select
+              id="cuisineSelect"
+              className="form-select"
+              value={selectedCuisine}
+              onChange={(e) => setSelectedCuisine(e.target.value)}
+            >
+              <option value="all">All Cuisines</option>
+              <option value="Italian">Italian</option>
+              <option value="Mediterranean">Mediterranean</option>
+              <option value="Chinese">Chinese</option>
+              <option value="Mexican">Mexican</option>
+              <option value="Indian">Indian</option>
+              <option value="Thai">Thai</option>
+              <option value="American">American</option>
+              <option value="French">French</option>
+              <option value="Japanese">Japanese</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Recipe Cards */}
+        <div className="row">
+          {filteredRecipes.map((recipe) => (
+            <div key={recipe._id} className="col-md-6 col-lg-4 mb-4">
+              <div className="card h-100 shadow-sm border">
+                <img
+                  src={recipe.image || "example.png"}
+                  className="card-img-top"
+                  alt={recipe.name}
+                  style={{ height: "200px", objectFit: "cover" }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{recipe.recipeName}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">
+                    {recipe.cuisine}
+                  </h6>
+                  <p className="card-text">Level: {recipe.level}</p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <a href="/recipedetails" data-discover="true">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-success"
+                      >
+                        View more...
+                      </button>
+                    </a>
+                    <div>
+                      <a href="/editrecipe/" data-discover="true">
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-warning"
+                        >
+                          Edit
+                        </button>
+                      </a>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger m-2"
+                        onClick={() => handleDelete(recipe._id)}
+                      >
+                        Delete
+                      </button>
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-        {filteredRecipes.length === 0 && (
-          <div className="col-12">
-            <p className="text-center">No recipes found.</p>
-          </div>
-        )}
+          ))}
+          {filteredRecipes.length === 0 && (
+            <div className="col-12">
+              <p className="text-center">No recipes found.</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
