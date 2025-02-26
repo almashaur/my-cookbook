@@ -1,63 +1,93 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { getRecipeById } from "../../../services/recipeService";
+import { useParams } from "react-router";
 
 const RecipeDetails = () => {
-  const [recipe, setRecipe] = useState(null);
-  const { id } = useParams();
+    const { recipeId } = useParams();
+    const [recipeData, setRecipeData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const fetchedRecipes = await fetch(`/recipes/${id}`);
-        if (!fetchedRecipes.ok) throw new Error('Failed to fetch recipes');
-        const data = await fetchedRecipes.json();
-        setRecipe(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchRecipe();
-  }, [id]);
+    useEffect(() => {
+        const fetchRecipe = async () => {
+            try {
+                const recipe = await getRecipeById(recipeId);
+                console.log(recipe)
+                setRecipeData(recipe);
+            } catch (error) {
+                setError("Failed to fetch recipe.");
+                console.log(error)
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  if (!recipe) return <p>Loading...</p>;
+        if (recipeId) {
+            fetchRecipe();
+        }
+    }, [recipeId]);
 
-  return (
-    <div>
-      <h1>{recipe.recipeName}</h1>
-      <img src={recipe.image} alt={recipe.recipeName} />
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+    if (!recipeData) return <div>No recipe found.</div>;
 
-      <p>Cuisine: {recipe.cuisine}</p>
-      <p>Level: {recipe.level}</p>
-      <p>Serves: {recipe.serves}</p>
 
-      <h2>Ingredients</h2>
-      <ul>
-        {recipe.ingredients.map((ingredient, index) => (
-          <li key={index}>
-            {ingredient.ingredientName}: {ingredient.amount}
-            {ingredient.alternatives.length > 0 && (
-              <span> (Alternatives: {ingredient.alternatives.join(", ")})</span>
-            )}
-          </li>
-        ))}
-      </ul>
+    return (
+        <div>
 
-      <h2>Instructions</h2>
-      <ol>
-        {recipe.instructions.map((instruction, index) => (
-          <li key={index}>{instruction}</li>
-        ))}
-      </ol>
+            <h1>{recipeData.recipeName}</h1>
+            {/* <h3>{recipeData.owner}</h3>  */}
+            {/* to be updated  */}
+            <img
+                src={recipeData.image || "example.png"}
+                className="card-img-top"
+                alt={recipeData.name}
+                style={{ height: "300px", objectFit: "cover" }}
+                />
+                <p><h2>Cuisine: </h2>{recipeData.cuisine}</p>
+                <p><h2>Level: </h2>{recipeData.level}</p>
+            <div className="col-md-6">
+                <h2>Ingredients</h2>
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ingredients</th>
+                            <th>Amounts</th>
+                            <th>Alternatives</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {recipeData.ingredients.map((ingredient, index) => (
+                            <tr key={index}>
+                                <td>{ingredient.ingredientName}</td>
+                                <td>{ingredient.amount}</td>
+                                <td>{ingredient.alternatives}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h2>Tools</h2>
+                <ul>
+                {recipeData.tools.map((tool)=>(
+                    <li key={tool}>{tool}</li>
+                ))}
+                </ul>
+            </div>
+            <div>
+                <h2>Instructions</h2>
+                <h4>
+                {recipeData.instructions}</h4>
+                
+            </div>
 
-      <h2>Tools</h2>
-      <ul>
-        {recipe.tools.map((tool, index) => (
-          <li key={index}>{tool}</li>
-        ))}
-      </ul>
+        </div>
+    );
+}
 
-    </div>
-  );
-};
+
+
+
 
 export default RecipeDetails;
