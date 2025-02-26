@@ -114,7 +114,8 @@ const AddRecipeForm = ({ recipe }) => {
         await updateRecipe(recipe._id,newFormData, {
           headers: { "Cache-Control": "no-cache" }, // Fix: Prevent 304 caching
         })
-        // navigate(`/recipes/${recipe._id}`); // Redirect on success
+        setMessage("Recipe updated successfully!");
+        navigate(`/recipedetails/${recipe._id}`); // Redirect on success
       }else{
         await createRecipe(newFormData,{
           headers: { "Cache-Control": "no-cache" }, // Fix: Prevent 304 caching

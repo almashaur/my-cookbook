@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { getUserRecipes, deleteRecipe } from "../../../services/recipeService";
 import { UserContext } from "../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const MyRecipies = (props) => {
   const propResult = props.cuisine?.name ? `${props.cuisine.name}` : "all";
 
   const { user } = useContext(UserContext);
-  // const [user] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState(`${propResult}`);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const navigate = useNavigate();
 
   // Fetch recipes when the component mounts
   useEffect(() => {
@@ -56,16 +57,16 @@ const MyRecipies = (props) => {
 
   return (
     <>
-      <div class="px-4 py-5 my-5 text-center">
+      <div className="px-4 py-5 my-5 text-center">
         <img
-          class="d-block mx-auto mb-4"
+          className="d-block mx-auto mb-4"
           src="/icons8-cookbook-50.png"
           alt=""
           width="72"
           height="57"
         />
-        <h1 class="display-5 fw-bold">Welcome back, {user.username}</h1>
-        <div class="col-lg-6 mx-auto">
+        <h1 className="display-5 fw-bold">Welcome back, {user.username}</h1>
+        <div className="col-lg-6 mx-auto">
           {/* Search and Dropdown */}
           <div className="row mb-4 align-items-end">
             <div className="col-md-8 mb-2 mb-md-0">
@@ -78,8 +79,12 @@ const MyRecipies = (props) => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-              <button type="button" class="btn btn-primary btn-lg px-4 gap-3">
+            <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+              <button
+                type="button"
+                className="btn btn-primary btn-lg px-4 gap-3"
+                onClick={() => navigate("/addrecipes")}
+              >
                 Add Recipe
               </button>
             </div>
@@ -125,7 +130,7 @@ const MyRecipies = (props) => {
                   </h6>
                   <p className="card-text">Level: {recipe.level}</p>
                   <div className="d-flex justify-content-between align-items-center">
-                    <a href="/recipedetails" data-discover="true">
+                    <a href={`/recipedetails/${recipe._id}`} data-discover="true">
                       <button
                         type="button"
                         className="btn btn-sm btn-outline-success"
@@ -134,7 +139,7 @@ const MyRecipies = (props) => {
                       </button>
                     </a>
                     <div>
-                      <a href="/editrecipe/" data-discover="true">
+                      <a href={`/editrecipes/${recipe._id}`} data-discover="true">
                         <button
                           type="button"
                           className="btn btn-sm btn-outline-warning"
